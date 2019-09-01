@@ -23,12 +23,12 @@ public class TemperatureSensor {
 
     @PostConstruct
     public void startProcessing() {
-        // TODO: add schedule
+        this.executor.schedule(this::probe, 1, SECONDS);
     }
 
     public void probe() {
         double temperature = 16 + rnd.nextGaussian() * 10;
-        // TODO: add publisherEvent
+        publisher.publishEvent(new Temperature(temperature));
         executor.schedule(this::probe, rnd.nextInt(5000), MILLISECONDS );
     }
 }
