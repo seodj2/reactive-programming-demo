@@ -18,7 +18,8 @@ public class TemperatureController {
     public SseEmitter events(HttpServletRequest request) {
         RxSseEmitter emitter = new RxSseEmitter();
 
-        // TODO: add subscribe
+        temperatureSensor.temperatureStream()
+            .subscribe(emitter.getSubscriber());
 
         return emitter;
     }

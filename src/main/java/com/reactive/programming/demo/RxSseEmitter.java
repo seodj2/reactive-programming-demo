@@ -12,7 +12,24 @@ public class RxSseEmitter extends SseEmitter {
     RxSseEmitter() {
         super(SSE_SESSION_TIMEOUT);
 
-        // TODO: add subscriber
+        this.subscriber = new Subscriber<Temperature>() {
+            @Override
+            public void onNext(Temperature temperature) {
+                try {
+                    RxSseEmitter.this.send(temperature);
+                } catch (IOException e) {
+                    unsubscribe();
+                }
+            }
+            @Override
+            public void onCompleted() { }
+
+            @Override
+            public void onError(Throwable e) { }
+        };
+
+        onCompletion(subscriber::unsubscribe);
+        onTimeout(subscriber::unsubscribe);
     }
 
     Subscriber<Temperature> getSubscriber() {
