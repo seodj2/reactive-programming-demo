@@ -1,34 +1,24 @@
 package com.reactive.programming.demo;
 
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import rx.Observable;
 
-import javax.annotation.PostConstruct;
 import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Component
 public class TemperatureSensor {
-    private final ApplicationEventPublisher publisher;
     private final Random rnd = new Random();
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-    public TemperatureSensor(ApplicationEventPublisher publisher) {
-        this.publisher = publisher;
+    // TODO: add temperature observable
+
+    private Temperature probe() {
+        return new Temperature(16 + rnd.nextGaussian() * 10);
     }
 
-    @PostConstruct
-    public void startProcessing() {
-        this.executor.schedule(this::probe, 1, SECONDS);
-    }
-
-    public void probe() {
-        double temperature = 16 + rnd.nextGaussian() * 10;
-        publisher.publishEvent(new Temperature(temperature));
-        executor.schedule(this::probe, rnd.nextInt(5000), MILLISECONDS );
+    public Observable<Temperature> temperatureStream() {
+        // TODO: return temperature observable
+        return null;
     }
 }
